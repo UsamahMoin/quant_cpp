@@ -1,9 +1,7 @@
-#include <iostream>
-#include <vector>
+#include "TechnicalIndicators.h"
 #include <numeric>
 #include <cmath>
 
-// Function to calculate Simple Moving Average (SMA)
 std::vector<double> calculateSMA(const std::vector<double>& prices, int period) {
     std::vector<double> sma;
     for (size_t i = 0; i <= prices.size() - period; ++i) {
@@ -13,7 +11,6 @@ std::vector<double> calculateSMA(const std::vector<double>& prices, int period) 
     return sma;
 }
 
-// Function to calculate Exponential Moving Average (EMA)
 std::vector<double> calculateEMA(const std::vector<double>& prices, int period) {
     std::vector<double> ema;
     double multiplier = 2.0 / (period + 1);
@@ -28,7 +25,6 @@ std::vector<double> calculateEMA(const std::vector<double>& prices, int period) 
     return ema;
 }
 
-// Function to calculate Relative Strength Index (RSI)
 std::vector<double> calculateRSI(const std::vector<double>& prices, int period) {
     std::vector<double> rsi;
     std::vector<double> gains;
@@ -57,33 +53,4 @@ std::vector<double> calculateRSI(const std::vector<double>& prices, int period) 
     }
 
     return rsi;
-}
-
-int main() {
-    std::vector<double> prices = { 100, 102, 101, 105, 110, 108, 107, 112, 115, 117, 120 };
-    int period = 3;
-
-    std::vector<double> sma = calculateSMA(prices, period);
-    std::vector<double> ema = calculateEMA(prices, period);
-    std::vector<double> rsi = calculateRSI(prices, period);
-
-    std::cout << "Simple Moving Average (SMA): ";
-    for (double value : sma) {
-        std::cout << value << " ";
-    }
-    std::cout << std::endl;
-
-    std::cout << "Exponential Moving Average (EMA): ";
-    for (double value : ema) {
-        std::cout << value << " ";
-    }
-    std::cout << std::endl;
-
-    std::cout << "Relative Strength Index (RSI): ";
-    for (double value : rsi) {
-        std::cout << value << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
 }

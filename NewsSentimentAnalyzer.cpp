@@ -1,10 +1,9 @@
+#include "NewsSentimentAnalyzer.h"
 #include <iostream>
-#include <string>
 #include <curl/curl.h>
 #include <vector>
 #include <sstream>
 
-// Simulated sentiment analysis function
 double analyzeSentiment(const std::string& text) {
     double score = 0.0;
     std::vector<std::string> positiveWords = { "good", "great", "positive", "up", "bullish" };
@@ -54,11 +53,4 @@ void fetchNews(const std::string& apiKey, const std::string& query) {
             std::cout << "Sentiment Score: " << sentimentScore << std::endl;
         }
     }
-}
-
-int main() {
-    std::string apiKey = "YOUR_NEWS_API_KEY";
-    std::string query = "stock market";
-    fetchNews(apiKey, query);
-    return 0;
 }
