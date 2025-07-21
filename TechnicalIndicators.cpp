@@ -30,6 +30,10 @@ std::vector<double> calculateRSI(const std::vector<double>& prices, int period) 
     std::vector<double> gains;
     std::vector<double> losses;
 
+    if (period <= 0 || prices.size() <= static_cast<size_t>(period)) {
+        return rsi;
+    }
+
     for (size_t i = 1; i < prices.size(); ++i) {
         double change = prices[i] - prices[i - 1];
         if (change > 0) {
@@ -44,12 +48,27 @@ std::vector<double> calculateRSI(const std::vector<double>& prices, int period) 
     double avgGain = std::accumulate(gains.begin(), gains.begin() + period, 0.0) / period;
     double avgLoss = std::accumulate(losses.begin(), losses.begin() + period, 0.0) / period;
 
+    if (avgLoss == 0) {
+        rsi.push_back(100.0);
+    } else if (avgGain == 0) {
+        rsi.push_back(0.0);
+    } else {
+        double rs = avgGain / avgLoss;
+        rsi.push_back(100 - (100 / (1 + rs)));
+    }
+
     for (size_t i = period; i < gains.size(); ++i) {
         avgGain = (avgGain * (period - 1) + gains[i]) / period;
         avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
 
-        double rs = avgGain / avgLoss;
-        rsi.push_back(100 - (100 / (1 + rs)));
+        if (avgLoss == 0) {
+            rsi.push_back(100.0);
+        } else if (avgGain == 0) {
+            rsi.push_back(0.0);
+        } else {
+            double rs = avgGain / avgLoss;
+            rsi.push_back(100 - (100 / (1 + rs)));
+        }
     }
 
     return rsi;
