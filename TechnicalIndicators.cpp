@@ -4,6 +4,9 @@
 
 std::vector<double> calculateSMA(const std::vector<double>& prices, int period) {
     std::vector<double> sma;
+    if (period <= 0 || prices.size() < static_cast<size_t>(period)) {
+        return sma;
+    }
     for (size_t i = 0; i <= prices.size() - period; ++i) {
         double sum = std::accumulate(prices.begin() + i, prices.begin() + i + period, 0.0);
         sma.push_back(sum / period);
@@ -13,6 +16,9 @@ std::vector<double> calculateSMA(const std::vector<double>& prices, int period) 
 
 std::vector<double> calculateEMA(const std::vector<double>& prices, int period) {
     std::vector<double> ema;
+    if (period <= 0 || prices.size() < static_cast<size_t>(period)) {
+        return ema;
+    }
     double multiplier = 2.0 / (period + 1);
     double prevEMA = std::accumulate(prices.begin(), prices.begin() + period, 0.0) / period;
     ema.push_back(prevEMA);
