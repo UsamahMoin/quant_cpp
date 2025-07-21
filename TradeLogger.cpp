@@ -18,11 +18,18 @@ void TradeLogger::displaySummary() {
     int winTrades = 0;
     int lossTrades = 0;
     double totalProfit = 0.0;
+    double totalReturn = 0.0;
+    int sellCount = 0;
 
     for (const auto& trade : trades) {
         if (trade.type == "sell") {
             double profit = (trade.price - buyPrice) * trade.shares;
             totalProfit += profit;
+            if (buyPrice != 0.0) {
+                double ret = (trade.price - buyPrice) / buyPrice * 100.0;
+                totalReturn += ret;
+                sellCount++;
+            }
             if (profit > 0) {
                 winTrades++;
             } else {
@@ -37,5 +44,7 @@ void TradeLogger::displaySummary() {
     std::cout << "Winning Trades: " << winTrades << "\n";
     std::cout << "Losing Trades: " << lossTrades << "\n";
     std::cout << "Total Profit: " << totalProfit << "\n";
+    double avgReturn = sellCount ? totalReturn / sellCount : 0.0;
+    std::cout << "Average Return: " << avgReturn << "%\n";
     std::cout << "Win Rate: " << (static_cast<double>(winTrades) / trades.size()) * 100 << "%\n";
 }
