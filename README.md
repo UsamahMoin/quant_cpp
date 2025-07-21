@@ -23,3 +23,15 @@ This project contains a collection of quantitative trading tools implemented in 
 
 6. **Trade Logger**
    - Log executed trades and provide a summary of trading performance, including metrics like win rate, average return, and profit/loss.
+
+## Building and Running Tests
+
+This project uses CMake and GoogleTest for the test suite located in `tests/`.
+To build and run the tests:
+
+```bash
+mkdir build && cd build
+cmake ..
+make
+ctest
+```
