@@ -4,20 +4,34 @@
 
 std::vector<double> calculateSMA(const std::vector<double>& prices, int period) {
     std::vector<double> sma;
-    for (size_t i = 0; i <= prices.size() - period; ++i) {
-        double sum = std::accumulate(prices.begin() + i, prices.begin() + i + period, 0.0);
-        sma.push_back(sum / period);
+    if (period <= 0) {
+        return sma;
+    }
+    size_t window = static_cast<size_t>(period);
+    if (prices.size() < window) {
+        return sma;
+    }
+    for (size_t i = 0; i + window <= prices.size(); ++i) {
+        double sum = std::accumulate(prices.begin() + i, prices.begin() + i + window, 0.0);
+        sma.push_back(sum / static_cast<double>(window));
     }
     return sma;
 }
 
 std::vector<double> calculateEMA(const std::vector<double>& prices, int period) {
     std::vector<double> ema;
-    double multiplier = 2.0 / (period + 1);
-    double prevEMA = std::accumulate(prices.begin(), prices.begin() + period, 0.0) / period;
+    if (period <= 0) {
+        return ema;
+    }
+    size_t window = static_cast<size_t>(period);
+    if (prices.size() < window) {
+        return ema;
+    }
+    double multiplier = 2.0 / (static_cast<double>(period) + 1.0);
+    double prevEMA = std::accumulate(prices.begin(), prices.begin() + window, 0.0) / static_cast<double>(window);
     ema.push_back(prevEMA);
 
-    for (size_t i = period; i < prices.size(); ++i) {
+    for (size_t i = window; i < prices.size(); ++i) {
         double currentEMA = (prices[i] - prevEMA) * multiplier + prevEMA;
         ema.push_back(currentEMA);
         prevEMA = currentEMA;

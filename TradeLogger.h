@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 struct Trade {
     std::string symbol;
@@ -19,8 +20,13 @@ public:
     void displaySummary();
 
 private:
+    struct Position {
+        double avgPrice = 0.0;
+        int shares = 0;
+    };
+
     std::vector<Trade> trades;
-    double buyPrice = 0.0;
+    std::unordered_map<std::string, Position> positions;
 };
 
 #endif // TRADE_LOGGER_H

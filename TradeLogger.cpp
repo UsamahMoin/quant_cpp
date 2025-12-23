@@ -22,21 +22,36 @@ void TradeLogger::displaySummary() {
     int sellCount = 0;
 
     for (const auto& trade : trades) {
+        Position& position = positions[trade.symbol];
         if (trade.type == "sell") {
-            double profit = (trade.price - buyPrice) * trade.shares;
-            totalProfit += profit;
-            if (buyPrice != 0.0) {
-                double ret = (trade.price - buyPrice) / buyPrice * 100.0;
-                totalReturn += ret;
-                sellCount++;
-            }
-            if (profit > 0) {
-                winTrades++;
-            } else {
-                lossTrades++;
+            int soldShares = trade.shares;
+            if (position.shares > 0) {
+                if (soldShares > position.shares) {
+                    soldShares = position.shares;
+                }
+                double profit = (trade.price - position.avgPrice) * soldShares;
+                totalProfit += profit;
+                if (position.avgPrice > 0.0) {
+                    double ret = (trade.price - position.avgPrice) / position.avgPrice * 100.0;
+                    totalReturn += ret;
+                    sellCount++;
+                }
+                if (profit > 0) {
+                    winTrades++;
+                } else {
+                    lossTrades++;
+                }
+                position.shares -= soldShares;
+                if (position.shares == 0) {
+                    position.avgPrice = 0.0;
+                }
             }
         } else {
-            buyPrice = trade.price;
+            int newShares = position.shares + trade.shares;
+            if (newShares > 0) {
+                position.avgPrice = (position.avgPrice * position.shares + trade.price * trade.shares) / newShares;
+                position.shares = newShares;
+            }
         }
     }
 
@@ -46,5 +61,6 @@ void TradeLogger::displaySummary() {
     std::cout << "Total Profit: " << totalProfit << "\n";
     double avgReturn = sellCount ? totalReturn / sellCount : 0.0;
     std::cout << "Average Return: " << avgReturn << "%\n";
-    std::cout << "Win Rate: " << (static_cast<double>(winTrades) / trades.size()) * 100 << "%\n";
+    double winRate = sellCount ? (static_cast<double>(winTrades) / sellCount) * 100.0 : 0.0;
+    std::cout << "Win Rate: " << winRate << "%\n";
 }
